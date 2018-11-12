@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from matplotlib import pyplot as plt
+
 import numpy
 mttf = 300*60
 mttr = 1*60
@@ -8,6 +10,9 @@ lamb = 1/mttf
 dt = .1
 c1 = .8
 c2 = .9
+
+#N = 1000000
+N = 1000000
 
 
 markovMatrix = [
@@ -20,7 +25,17 @@ markovMatrix = [
 p = [numpy.matrix([[1], [0], [0]])]
 m = numpy.matrix(markovMatrix)
 
-for i in range(0, 100):
+for i in range(0, N):
     p.append(numpy.dot(m, p[-1]))
 
 print(m)
+
+
+#Reliability
+# R(t) = P0(t) + P1(t) = [1 1 0] dot P
+R = list(map(lambda pt: numpy.dot(numpy.matrix([1,1,0]), pt).item(0,0), p))
+plt.title("Reliability") 
+plt.xlabel("Time (minutes)") 
+plt.ylabel("R") 
+plt.plot(R) 
+plt.show()
